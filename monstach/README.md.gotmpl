@@ -1,0 +1,55 @@
+{{ template "chart.header" . }}
+{{ template "chart.deprecationWarning" . }}
+
+{{ template "chart.badgesSection" . }}
+
+{{ template "chart.description" . }}
+
+## How To
+
+### Configure MongoDB Source and ElasticSearch Target
+
+At very minimum, specify the MongoDB source and ElasticSearch target under `config` key.
+
+```yaml
+config:
+  change-stream-namespaces:
+    - "elasticsearch-master"
+  config-database-name: "mongodb"
+```
+
+### Configure Mapping
+
+If you need to customize how Monstache do mapping, specify the configuration under `mapping` key. The expected values is array of object, with all the key and value will be transformed into TOML configuration. To learn more, please check [the complete documentation](https://rwynn.github.io/monstache-site/advanced/#index-mapping)
+```yaml
+- namespace: target-namespace
+  index: target-index
+```
+
+### Configure Middleware
+
+To supply Monstache [middleware](https://rwynn.github.io/monstache-site/advanced/#middleware), specify the code under `script` key. It expecting an array of object with `namespace` and `script` key.
+
+```yaml
+script:
+  - namespace: target-namespace
+    script:
+      lang: js
+      code: |
+        var counter = 1;
+        module.exports = function(doc) {
+            doc.foo += "test" + counter;
+            counter++;
+            return doc;
+        }
+```
+
+{{ template "chart.homepageLine" . }}
+
+{{ template "chart.maintainersSection" . }}
+
+{{ template "chart.sourcesSection" . }}
+
+{{ template "chart.requirementsSection" . }}
+
+{{ template "chart.valuesSection" . }}

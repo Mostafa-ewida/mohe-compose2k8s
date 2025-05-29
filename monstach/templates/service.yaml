@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "monstache.fullname" . }}
+  labels:
+    {{- include "monstache.labels" . | nindent 4 }}
+spec:
+  {{- if .Values.worker.enabled }}
+  clusterIP: None
+  {{- end }}
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "monstache.selectorLabels" . | nindent 4 }}

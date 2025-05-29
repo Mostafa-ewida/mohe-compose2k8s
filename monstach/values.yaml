@@ -1,0 +1,119 @@
+# Default values for monstache.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+image:
+  repository: rwynn/monstache
+  pullPolicy: IfNotPresent
+  # Overrides the image tag whose default is the chart appVersion.
+  tag: ""
+
+imagePullSecrets: []
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  # Specifies whether a service account should be created
+  create: true
+  # Annotations to add to the service account
+  annotations: {}
+  # The name of the service account to use.
+  # If not set and create is true, a name is generated using the fullname template
+  name: ""
+
+podAnnotations: {}
+
+podSecurityContext: {}
+  # fsGroup: 2000
+
+securityContext: {}
+  # capabilities:
+  #   drop:
+  #   - ALL
+  # readOnlyRootFilesystem: true
+  # runAsNonRoot: true
+  # runAsUser: 1000
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: false
+  className: ""
+  annotations: {}
+    # kubernetes.io/ingress.class: nginx
+    # kubernetes.io/tls-acme: "true"
+  hosts:
+    - host: chart-example.local
+      paths:
+        - path: /
+          pathType: ImplementationSpecific
+  tls: []
+  #  - secretName: chart-example-tls
+  #    hosts:
+  #      - chart-example.local
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #   cpu: 100m
+  #   memory: 128Mi
+  # requests:
+  #   cpu: 100m
+  #   memory: 128Mi
+
+autoscaling:
+  enabled: false
+  minReplicas: 1
+  maxReplicas: 100
+  targetCPUUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+# -- Environment Variables to be injected
+env: {}
+
+# -- Monstache related [global](https://rwynn.github.io/monstache-site/start/#usage) config
+
+config:
+  monstache-config.yaml: |
+    mongo-url: "mongodb://lclr_user:1th4ok1ymfurQaM9@middleware-database-primary:27017,middleware-database-secondary-1:27017,middleware-database-secondary-2:27017/lclr_db?replicaSet=replicaset"
+    elasticsearch-urls: ["http://elasticsearch:9200"]
+    change-stream-namespaces: ["lclr_db"]
+    stdout: true
+
+# -- Monstache [mapping](https://rwynn.github.io/monstache-site/advanced/#index-mapping) configuration
+# in form of array as follows
+# ```
+# - namespace: target-namespace
+#   index: target-index
+# ```
+mapping: []
+
+# -- Monstache [scripts](https://rwynn.github.io/monstache-site/advanced/#middleware) configuration.
+# in form of array with the following format
+# ```
+# - namespace: target-namespace
+#   script:
+#     lang: js/go
+#     code: |
+#       multiline transform code
+# ```
+script: []
+
+worker:ءذ
+  # -- Enable worker mode. If enabled, the deployment will be changed into statefulset.
+  enabled: false
+  # -- Number of worker to spawn
+  count: 0

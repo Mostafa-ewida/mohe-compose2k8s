@@ -1,0 +1,40 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: {{ include "monstache.fullname" . }}
+data:
+  config.toml: |-
+    {{- range $key, $val := .Values.config }}
+    {{ $key }} = {{ $val | toJson }}
+    {{- end }}
+    {{- if .Values.worker.enabled }}
+    workers = [
+    {{- range $i, $e := until (.Values.worker.count | int) }}
+    "{{ include "monstache.fullname" $ }}-{{ $i }}",
+    {{- end }}
+    ]
+    {{- end }}
+    {{ range $val := .Values.mapping }}
+    [[mapping]]
+    {{- range $k, $v := $val }}
+    {{ $k }} = {{ $v | quote }}
+    {{- end }}
+    {{- end }}
+
+    {{ with .Values.script }}
+    [[script]]
+    {{- range $index, $script := . }}
+    {{- range $k, $v := $script }}
+    {{- if eq "script" $k }}
+    path = "/etc/monstache/transforms/script-{{ $index }}.{{ $v.lang }}"
+    {{- else }}
+    {{ $k }} = {{ $v | toJson }}
+    {{- end }}
+    {{- end }}
+    {{- end }}
+    {{- end }}
+  
+  {{- range $index, $val := .Values.script }}
+  script-{{$index}}.js: |-
+    {{- $val.script.code | nindent 4 -}}
+  {{- end }}
