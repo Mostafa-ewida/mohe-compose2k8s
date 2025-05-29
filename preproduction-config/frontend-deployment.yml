@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: config-frontend-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: config-frontend
+  template:
+    metadata:
+      labels:
+        app: config-frontend
+    spec:
+      containers:
+        - name: config-frontend-container
+          image: "${CONFIGURATION_FRONTEND_IMAGE}"
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: config-frontend-configmap
+            - secretRef:
+                name: config-frontend-secret

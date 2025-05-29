@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: employee-interface-testing-deployment
+  labels:
+    app: employee-interface-testing
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: employee-interface-testing
+  template:
+    metadata:
+      labels:
+        app: employee-interface-testing
+    spec:
+      containers:
+        - name: employee-interface
+          image: busybox:latest
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: employee-interface-config
+            - secretRef:
+                name: employee-interface-secret

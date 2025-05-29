@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: config-frontend-configmap
+data:
+  CONFIGURATION_FRONTEND_DOMAIN: ""
+  CONFIGURATION_BACKEND_DOMAIN: ""
+  MIDDLEWARE_DOMAIN: ""
+  VIRTUAL_HOST: "${CONFIGURATION_FRONTEND_DOMAIN}"
+  LETSENCRYPT_HOST: "${CONFIGURATION_FRONTEND_DOMAIN}"
+  LETSENCRYPT_EMAIL: "support@fixedmea.com"
+  REACT_APP_BACKEND_URL: "https://${CONFIGURATION_BACKEND_DOMAIN}"
+  REACT_APP_SENTRY_ENVIRONMENT: "testing"
+
+  NGINX_EXTRA_CONFIG: |
+    add_header Content-Security-Policy "
+    default-src 'self';
+    font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com;
+    style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com;
+    script-src 'self' https://maps.googleapis.com;
+    img-src 'self' https://www.youtube.com https://maps.gstatic.com https://maps.googleapis.com data: https://${MIDDLEWARE_DOMAIN};
+    connect-src 'self' https://${CONFIGURATION_BACKEND_DOMAIN} https://${MIDDLEWARE_DOMAIN} https://analytics.esportal.live;
+    ";

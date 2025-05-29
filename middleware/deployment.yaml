@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: middleware-deployment
+spec:
+  replicas: 4
+  selector:
+    matchLabels:
+      app: middleware
+  template:
+    metadata:
+      labels:
+        app: middleware
+    spec:
+      containers:
+      - name: middleware-container
+        image: busybox:latest  # Replace with gitlab image image
+        ports:
+        - containerPort: 3000
+        envFrom:
+        - configMapRef:
+            name: middleware-config
+        - secretRef:
+            name: middleware-secrets
+          
+        volumeMounts:
+        - name: middleware-assets
+          mountPath: /app/server/containers
+        readinessProbe:
+          exec:
+            command: ["wget", "-O", "/dev/null", "-q", "localhost:3000"]
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 3
+          failureThreshold: 5
+      volumes:
+      - name: middleware-assets
+        persistentVolumeClaim:
+          claimName: middleware-assets-pvc
+      hostAliases:
+      - ip: "41.128.245.126"
+        hostnames:
+        - "wg.esportal.io"

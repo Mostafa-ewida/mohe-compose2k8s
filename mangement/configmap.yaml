@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: management-config
+data:
+  MANAGEMENT_DOMAIN: ""
+  ROOT_URL: "https://${MANAGEMENT_DOMAIN}"
+  PORT: "3000"
+  HTTP_FORWARDED_COUNT: "1"
+  VIRTUAL_HOST: "${MANAGEMENT_DOMAIN}"
+  LETSENCRYPT_HOST: "${MANAGEMENT_DOMAIN}"
+  LETSENCRYPT_EMAIL: "support@fixedmea.com"
+  METEOR_SETTINGS: |
+    {
+      "public": {
+        "domain": "http://${MIDDLEWARE_DOMAIN}"
+      },
+      "middleware": {
+        "domain": "http://middleware:3000/api",
+        "secret": "]4qWJ.Le_{=_c,F",
+        "dynamic_services_path": "/dynamic_services",
+        "dynamic_users_path": "/dynamic_users",
+        "roles_path": "/roles"
+      }
+    }

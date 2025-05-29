@@ -1,0 +1,736 @@
+version: "2.4"
+services:
+  middleware:
+    image: ${MIDDLEWARE_IMAGE}
+    restart: always
+    # scale: 4
+    expose:
+      - 3000
+    depends_on:
+      middleware-database-primary:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+      fix-middleware-permissions:
+        condition: service_started
+    volumes:
+      - "middleware-assets:/app/server/containers"
+    extra_hosts:
+      - "wg.esportal.io:41.128.245.126"
+    networks:
+      middleware-network:
+        aliases:
+          - middleware-mohe-testing
+      middleware-mongo-database-network:
+      redis-network:
+      rabbitmq-network:
+      elasticsearch-network:
+      nginx_proxy-network:
+        aliases:
+         - mohe
+    healthcheck:
+      test: ["CMD", "wget", "-O", "/dev/null", "-q", "localhost:3000"]
+      interval: 30s
+      timeout: 3s
+      retries: 5
+      start_period: 30s
+    environment:
+      NODE_ENV: "testing"
+      ELASTICSEARCHHOST: http://elastic:HGkjHF&k(767GYHYYkGjk8JK@elasticsearch:9200
+      VIRTUAL_HOST: ${MIDDLEWARE_DOMAIN}
+      LETSENCRYPT_HOST: ${MIDDLEWARE_DOMAIN}
+      LETSENCRYPT_EMAIL: support@arabhosters.com
+      MONGO_URL: mongodb://lclr_user:1th4ok1ymfurQaM9@middleware-database-primary:27017,middleware-database-secondary-1:27017,middleware-database-secondary-2:27017/lclr_db?replicaSet=replicaset
+      MONGODB_DATABASE: lclr_db
+      MANAGER_USERNAME: admin
+      AUTOMATIC_NOMINATION_CRON_LIMIT: 1
+      NOMINATION_EXPIRATION_CRON_LIMIT: 1
+      DEEP_LINKING_BASE: https://studentmobileapp.page.link
+      REDIS_URL: redis://:hgdfwegf67435jsdbjkTY@redis:6379
+      RABBITMQ_URL: amqp://retry:sdfjgh45iotgdfjk456@rabbitmq:5672
+      BASIC_AUTH_USERNAME: BASIC_AUTH_USERNAME
+      BASIC_AUTH_PASSWORD: BASIC_AUTH_PASSWORD
+      ONE_REQUEST_SERVICES: admission
+      ENABLE_DELETE_USER: 'true'
+      ENABLE_DELETE_REQUEST: 'true'
+#      ELASTIC_APM_SERVICE_NAME: eservice-middleware-ncedc
+#      ELASTIC_APM_SECRET_TOKEN: xxVpmQB2HMzCL9PgBHVrnxjNXXw5J7bd79DFm6sjBJR5HPXDhcF8MSb3vv4bpg44
+#      ELASTIC_APM_SERVER_URL: https://ids.fixed.ninja:8201
+      COOKIE_SECRET: n*sdnNc<V13~eTdvSF2l
+      SENTRY_DSN: https://cbb0f2983c154e1d8cbf657a7c29dc83@bugs.fslabs.net/13
+      CORS_DOMAIN: https://${STUDENT_INTERFACE_DOMAIN} http://localhost:3010 http://localhost:3060 https://${EMPLOYEE_DOMAIN} http://localhost:3000 https://${CONFIGURATION_BACKEND_DOMAIN} https://${STUDENT_AGENT_DOMAIN} http://localhost:3001 http://localhost:3002 http://localhost:3003 http://localhost:3004 
+      OVER_DUE_CRON_EXP: 0 */2 * * * * 
+      SEND_NOTIFICATIONS: 'true'
+      DEBUG: 'eservice:*'
+      BYPASSVALIDATION: 'true'
+      ENABLE_LOGIN_AS_WITH_ATTRIBUTES: 'true'
+      LOGIN_AS_ATTRIBUTES: passportId,nationality
+      REDIRECT_URL: https://${STUDENT_INTERFACE_DOMAIN}/account-verification
+      MIDDLEWARE_URL: https://${MIDDLEWARE_DOMAIN}
+      silentCallHost: https://${MIDDLEWARE_DOMAIN}
+      CONFIGURATION_BACKEND_URL: http://mohe-preproduction-config-backend:3000
+      VM_TIMEOUT_MS: 1000
+      REQUEST_TIMEOUT: 120000
+      FAWRY: >
+        {
+          "MERCHANT_CODE": "1tSa6uxz2nR7wGl7UnIhfA==",
+          "SECURE_HASH_KEY": "c2e0ae6b594e466990f04aa2ff218eef",
+          "URL": "https://atfawry.fawrystaging.com/ECommercePlugin/FawryPay.jsp"
+        } 
+
+  middleware-new:
+    image: git.serversadmins.com:5005/webdev/mohe/middleware:development-superadmin
+    restart: always
+    # scale: 4
+    expose:
+      - 3000
+    depends_on:
+      middleware-database-primary:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+      fix-middleware-permissions:
+        condition: service_started
+    volumes:
+      - "middleware-assets:/app/server/containers"
+    extra_hosts:
+      - "wg.esportal.io:41.128.245.126"
+    networks:
+      middleware-network:
+        aliases:
+          - middleware-mohe-testing
+      middleware-mongo-database-network:
+      redis-network:
+      rabbitmq-network:
+      elasticsearch-network:
+      nginx_proxy-network:
+        aliases:
+         - mohe
+    healthcheck:
+      test: ["CMD", "wget", "-O", "/dev/null", "-q", "localhost:3000"]
+      interval: 30s
+      timeout: 3s
+      retries: 5
+      start_period: 30s
+    environment:
+      NODE_ENV: "testing"
+      ELASTICSEARCHHOST: http://elastic:HGkjHF&k(767GYHYYkGjk8JK@elasticsearch:9200
+      VIRTUAL_HOST: middleware.superadmin.mohe.testing.fslabs.net
+      LETSENCRYPT_HOST: middleware.superadmin.mohe.testing.fslabs.net
+      LETSENCRYPT_EMAIL: support@arabhosters.com
+      MONGO_URL: mongodb://lclr_user:1th4ok1ymfurQaM9@middleware-database-primary:27017,middleware-database-secondary-1:27017,middleware-database-secondary-2:27017/lclr_db?replicaSet=replicaset
+      MONGODB_DATABASE: lclr_db
+      MANAGER_USERNAME: admin
+      AUTOMATIC_NOMINATION_CRON_LIMIT: 1
+      NOMINATION_EXPIRATION_CRON_LIMIT: 1
+      DEEP_LINKING_BASE: https://studentmobileapp.page.link
+      REDIS_URL: redis://anyone:hgdfwegf67435jsdbjkTY@redis:6379
+      RABBITMQ_URL: amqp://retry:sdfjgh45iotgdfjk456@rabbitmq:5672
+      BASIC_AUTH_USERNAME: BASIC_AUTH_USERNAME
+      BASIC_AUTH_PASSWORD: BASIC_AUTH_PASSWORD
+      ONE_REQUEST_SERVICES: admission
+      ENABLE_DELETE_USER: 'true'
+      ENABLE_DELETE_REQUEST: 'true'
+#      ELASTIC_APM_SERVICE_NAME: eservice-middleware-ncedc
+#      ELASTIC_APM_SECRET_TOKEN: xxVpmQB2HMzCL9PgBHVrnxjNXXw5J7bd79DFm6sjBJR5HPXDhcF8MSb3vv4bpg44
+#      ELASTIC_APM_SERVER_URL: https://ids.fixed.ninja:8201
+      COOKIE_SECRET: n*sdnNc<V13~eTdvSF2l
+      SENTRY_DSN: https://cbb0f2983c154e1d8cbf657a7c29dc83@bugs.fslabs.net/13
+      CORS_DOMAIN: https://student.mohe.testing.fslabs.net http://localhost:3010 http://localhost:3060 https://employee.mohe.testing.fslabs.net http://localhost:3000 https://backend.config.mohe.testing.fslabs.net https://agent.mohe.testing.fslabs.net http://localhost:3001 http://localhost:3002 http://localhost:3003 http://localhost:3004 
+      OVER_DUE_CRON_EXP: 0 */2 * * * * 
+      SEND_NOTIFICATIONS: 'true'
+      DEBUG: 'eservice:*'
+      BYPASSVALIDATION: 'true'
+      ENABLE_LOGIN_AS_WITH_ATTRIBUTES: 'true'
+      LOGIN_AS_ATTRIBUTES: passportId,nationality
+      REDIRECT_URL: https://student.mohe.testing.fslabs.net/account-verification
+      MIDDLEWARE_URL: https://middleware.superadmin.mohe.testing.fslabs.net
+      silentCallHost: https://middleware.superadmin.mohe.testing.fslabs.net
+      CONFIGURATION_BACKEND_URL: http://mohe-preproduction-config-backend:3000
+      VM_TIMEOUT_MS: 1000
+      REQUEST_TIMEOUT: 120000
+      FAWRY: >
+        {
+          "MERCHANT_CODE": "1tSa6uxz2nR7wGl7UnIhfA==",
+          "SECURE_HASH_KEY": "c2e0ae6b594e466990f04aa2ff218eef",
+          "URL": "https://atfawry.fawrystaging.com/ECommercePlugin/FawryPay.jsp"
+        } 
+
+
+  redis:
+    image: "bitnami/redis:6.2"
+    environment:
+      - REDIS_PASSWORD=hgdfwegf67435jsdbjkTY
+    expose:
+      - 6379
+    restart: always
+    networks:
+      - redis-network
+
+
+  fix-middleware-permissions:
+    image: 'alpine:3.10'
+    user: root
+    command: chown -R 1000:1000 /app/server
+    volumes:
+      - "middleware-assets:/app/server/containers"
+
+  rabbitmq:
+    image: "bitnami/rabbitmq:3.7"
+    restart: always
+    environment:
+      - RABBITMQ_PASSWORD=sdfjgh45iotgdfjk456
+      - RABBITMQ_USERNAME=retry
+      - RABBITMQ_DISK_FREE_LIMIT=100000
+    expose:
+      - 5672
+      - 15672
+    healthcheck:
+      test: ["CMD", "rabbitmqctl", "status"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+    volumes:
+      - "rabbitmq-persistence:/bitnami"
+    networks:
+      - rabbitmq-network
+
+  rabbitmq-retry-http:
+    image: git.serversadmins.com:5005/webdev/rabbitmq-retry-http:latest-staging
+    restart: always
+    networks:
+      - rabbitmq-network
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      - RABBITMQ_URL=amqp://retry:sdfjgh45iotgdfjk456@rabbitmq:5672
+      - RETRY_DELAY=60000
+
+  notifications:
+    image: git.serversadmins.com:5005/webdev/eservice-notification:latest-staging
+    restart: always
+    networks:
+      - middleware-mongo-database-network
+      - rabbitmq-network
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+    environment:
+      - MONGO_URL=mongodb://lclr_user:1th4ok1ymfurQaM9@middleware-database-primary:27017,middleware-database-secondary-1:27017,middleware-database-secondary-2:27017/lclr_db?replicaSet=replicaset
+      - RABBITMQ_URL=amqp://retry:sdfjgh45iotgdfjk456@rabbitmq:5672
+      - RETRY_DELAY=60000
+      - DEBUG=rabbitMq_notification
+
+  fix-mongodb-permissions:
+    image: 'alpine:3.10'
+    user: root
+    command: chown -R 1001:1001 /bitnami
+    volumes:
+      - "middleware-primary-data:/bitnami"
+
+  middleware-database-primary:
+    image: "bitnami/mongodb:4.4"
+    restart: always
+    networks:
+      - middleware-mongo-database-network
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+    expose:
+      - 27017
+    ports:
+      - "27717:27017"
+    volumes:
+      - "middleware-primary-data:/bitnami"
+    environment:
+      - MONGODB_REPLICA_SET_MODE=primary
+      - MONGODB_REPLICA_SET_KEY=middleware
+      - MONGODB_REPLICA_SET_NAME=replicaset
+      - MONGODB_ADVERTISED_HOSTNAME=middleware-database-primary
+      - MONGODB_PORT_NUMBER=27017
+      - MONGODB_ROOT_PASSWORD=SsfTDTTf8tkzeaGx
+      - MONGODB_DATABASE=lclr_db
+      - MONGODB_USERNAME=lclr_user
+      - MONGODB_PASSWORD=1th4ok1ymfurQaM9
+      - MONGODB_EXTRA_FLAGS=--noscripting
+    depends_on:
+      - fix-mongodb-permissions
+
+  middleware-database-secondary-1:
+    image: "bitnami/mongodb:4.4"
+    restart: always
+    networks:
+      - middleware-mongo-database-network
+    expose:
+      - 27017
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+    depends_on:
+      - middleware-database-primary
+    environment:
+      - MONGODB_REPLICA_SET_MODE=secondary
+      - MONGODB_REPLICA_SET_KEY=middleware
+      - MONGODB_REPLICA_SET_NAME=replicaset
+      - MONGODB_ADVERTISED_HOSTNAME=middleware-database-secondary-1
+      - MONGODB_PRIMARY_HOST=middleware-database-primary
+      - MONGODB_PRIMARY_ROOT_PASSWORD=SsfTDTTf8tkzeaGx
+      - MONGODB_PORT_NUMBER=27017
+      - MONGODB_EXTRA_FLAGS=--noscripting
+
+  middleware-database-secondary-2:
+    image: "bitnami/mongodb:4.4"
+    restart: always
+    networks:
+      - middleware-mongo-database-network
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+    expose:
+      - 27017
+    depends_on:
+      - middleware-database-primary
+    environment:
+      - MONGODB_REPLICA_SET_MODE=secondary
+      - MONGODB_REPLICA_SET_KEY=middleware
+      - MONGODB_REPLICA_SET_NAME=replicaset
+      - MONGODB_ADVERTISED_HOSTNAME=middleware-database-secondary-2
+      - MONGODB_PRIMARY_HOST=middleware-database-primary
+      - MONGODB_PRIMARY_ROOT_PASSWORD=SsfTDTTf8tkzeaGx
+      - MONGODB_PORT_NUMBER=27017
+      - MONGODB_EXTRA_FLAGS=--noscripting
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.6.2
+    restart: always
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=true
+      - ELASTIC_USERNAME=elastic
+      - cluster.routing.allocation.disk.watermark.low=1gb
+      - cluster.routing.allocation.disk.watermark.high=1gb
+      - cluster.routing.allocation.disk.watermark.flood_stage=1gb
+
+      - ELASTIC_PASSWORD=HGkjHF&k(767GYHYYkGjk8JK
+#      - bootstrap.memory_lock=true
+#      - "ES_JAVA_OPTS=-Xms1g -Xmx1g"
+    expose:
+      - 9200
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    healthcheck:
+      test: ["CMD", "curl", "localhost:9200"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 60s
+    networks:
+      - elasticsearch-network
+
+  monstache:
+    image: git.serversadmins.com:5005/webdev/mohe/middleware/monstache:mohe-testing
+    restart: always
+    depends_on:
+      middleware-database-primary:
+        condition: service_healthy
+      elasticsearch:
+        condition: service_healthy
+    networks:
+      - elasticsearch-network
+      - middleware-mongo-database-network
+    command: ./elastic-sync.sh
+    environment:
+      - MONSTACHE_MONGO_URL=mongodb://lclr_user:1th4ok1ymfurQaM9@middleware-database-primary:27017,middleware-database-secondary-1:27017,middleware-database-secondary-2:27017/lclr_db?replicaSet=replicaset
+      - MONSTACHE_CHANGE_STREAM_NS=lclr_db
+      - MONSTACHE_ES_URLS=http://elastic:HGkjHF&k(767GYHYYkGjk8JK@elasticsearch:9200
+      - ENABLE_STDOUT_LOG=true
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.6.2
+    restart: always
+    depends_on:
+      elasticsearch:
+        condition: service_healthy
+    environment:
+      VIRTUAL_HOST: kibana.mohe.testing.fslabs.net
+      LETSENCRYPT_HOST: kibana.mohe.testing.fslabs.net
+      LETSENCRYPT_EMAIL: support@fixedmea.com
+      XPACK_MONITORING_ENABLED: 'true'
+      SERVER_NAME: kibana
+      SERVER_HOST: '"0"'
+      ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
+      ELASTICSEARCH_USERNAME: elastic
+      ELASTICSEARCH_PASSWORD: 'HGkjHF&k(767GYHYYkGjk8JK'
+    expose:
+      - "5601"
+    # volumes:
+    #   - ./kibana.yml:/usr/share/kibana/config/kibana.yml
+    networks:
+      - elasticsearch-network
+      - nginx_proxy-network
+
+  management:
+      image: git.serversadmins.com:5005/webdev/mohe/management:testing
+      restart: always
+      expose:
+        - 3000
+      depends_on:
+        mohe_management-database:
+          condition: service_healthy
+        middleware:
+          condition: service_healthy
+      networks:
+        - management-mongo-database-network
+        - middleware-network
+        - nginx_proxy-network
+      healthcheck:
+        test: ["CMD", "wget", "-O", "/dev/null", "-q", "localhost:3000"]
+        interval: 30s
+        timeout: 3s
+        retries: 3
+        start_period: 30s
+      environment:
+        VIRTUAL_HOST: ${MANAGEMENT_DOMAIN}
+        LETSENCRYPT_HOST: ${MANAGEMENT_DOMAIN}
+        LETSENCRYPT_EMAIL: support@fixedmea.com
+        ROOT_URL: https://${MANAGEMENT_DOMAIN}
+        MONGO_URL: mongodb://hkcp_user:uB7Idr3efxqyyZED@mohe_management-database/hkcp_db
+        PORT: 3000
+        ADMIN_PASSWORD: cdkwheflkwhrERSE535646
+        HTTP_FORWARDED_COUNT: 1
+        METEOR_SETTINGS: >
+          {
+          "public": {
+          "domain": "http://${MIDDLEWARE_DOMAIN}"
+          },
+          "middleware": {
+          "domain": "http://middleware:3000/api",
+          "secret": "]4qWJ.Le_{=_c,F",
+          "dynamic_services_path": "/dynamic_services",
+          "dynamic_users_path": "/dynamic_users",
+          "roles_path": "/roles"
+          }
+          }
+
+  mohe_management-database:
+    image: "bitnami/mongodb:4.1.1"
+    restart: always
+    networks:
+      - management-mongo-database-network      
+    expose:
+      - 27017
+    ports:
+      - "27020:27017"
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 30s
+    environment:
+      - MONGODB_ADVERTISED_HOSTNAME=management-database
+      - MONGODB_PORT_NUMBER=27017
+      - MONGODB_ROOT_PASSWORD=oe2W3LZlt6DHrF16
+      - MONGODB_DATABASE=hkcp_db
+      - MONGODB_USERNAME=hkcp_user
+      - MONGODB_PASSWORD=uB7Idr3efxqyyZED
+      - MONGODB_EXTRA_FLAGS=--noscripting
+
+  user-interface:
+    image: ${STUDENT_INTERFACE_IMAGE}
+    restart: always
+    expose:
+      - 8080
+    networks:
+      - nginx_proxy-network
+    environment:
+      VIRTUAL_HOST: ${STUDENT_INTERFACE_DOMAIN}
+      LETSENCRYPT_HOST: ${STUDENT_INTERFACE_DOMAIN}
+      LETSENCRYPT_EMAIL: support@fixedmea.com
+      REACT_APP_BACKEND_URL: 'https://${MIDDLEWARE_DOMAIN}'
+      REACT_APP_SERVER_DATA: >
+        {
+          REACT_APP_BACKEND_URL: 'https://${MIDDLEWARE_DOMAIN}',
+          REACT_APP_SENTRY_DSN: 'https://a9874586fb464255b574b28b2487e902@bugs.fslabs.net/29',
+          REACT_APP_SENTRY_ENVIRONMENT: 'testing'
+        }
+      NGINX_EXTRA_CONFIG: >
+         add_header Content-Security-Policy "
+         default-src 'self';
+         frame-src 'self' https://test-nbe.gateway.mastercard.com;
+         font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com;
+         style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com;
+         script-src 'self' 'unsafe-inline' 'unsafe-eval' https://maps.googleapis.com https://test-nbe.gateway.mastercard.com;
+         img-src 'self' https://www.youtube.com https://maps.gstatic.com https://maps.googleapis.com data: https://${MIDDLEWARE_DOMAIN};
+         connect-src 'self' https://${CONFIGURATION_BACKEND_DOMAIN} https://${MIDDLEWARE_DOMAIN} https://analytics.esportal.live https://bugs.fslabs.net;
+         ";
+
+  agent-interface:
+    image: git.serversadmins.com:5005/webdev/mohe/student-agent:latest-testing
+    restart: always
+    expose:
+      - 8080
+    networks:
+      - nginx_proxy-network
+    environment:
+      VIRTUAL_HOST: ${STUDENT_AGENT_DOMAIN}
+      LETSENCRYPT_HOST: ${STUDENT_AGENT_DOMAIN}
+      LETSENCRYPT_EMAIL: support@fixedmea.com
+      REACT_APP_BACKEND_URL: 'https://${MIDDLEWARE_DOMAIN}'
+      REACT_APP_SERVER_DATA: >
+        { 
+          REACT_APP_BACKEND_URL: 'https://${MIDDLEWARE_DOMAIN}',
+          REACT_APP_SENTRY_DSN: 'https://a9874586fb464255b574b28b2487e902@bugs.fslabs.net/29',
+          REACT_APP_SENTRY_ENVIRONMENT: 'testing'
+        }
+      NGINX_EXTRA_CONFIG: >
+         add_header Content-Security-Policy "
+         default-src 'self';
+         frame-src 'self' https://test-nbe.gateway.mastercard.com;
+         font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com;
+         style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com;
+         script-src 'self' 'unsafe-eval' https://maps.googleapis.com https://test-nbe.gateway.mastercard.com;
+         img-src 'self' https://www.youtube.com https://maps.gstatic.com https://maps.googleapis.com data: https://${MIDDLEWARE_DOMAIN};
+         connect-src 'self' https://${CONFIGURATION_BACKEND_DOMAIN} https://${MIDDLEWARE_DOMAIN} https://analytics.esportal.live https://bugs.fslabs.net;
+         ";
+
+
+  employee-interface:
+    image: ${EMPLOYEE_IMAGE}
+    restart: always
+    expose:
+      - 8080
+    networks:
+      nginx_proxy-network:
+    environment:
+      VIRTUAL_HOST: ${EMPLOYEE_DOMAIN}
+      LETSENCRYPT_HOST: ${EMPLOYEE_DOMAIN}
+      LETSENCRYPT_EMAIL: support@fixedmea.com
+      REACT_APP_BACKEND_URL: 'https://${MIDDLEWARE_DOMAIN}'
+      REACT_APP_SERVER_DATA: >
+        {
+          REACT_APP_BACKEND_URL: 'https://${MIDDLEWARE_DOMAIN}',
+          REACT_APP_SENTRY_DSN: 'https://a9874586fb464255b574b28b2487e902@bugs.fslabs.net/29',
+          REACT_APP_SENTRY_ENVIRONMENT: 'testing'
+        }
+      NGINX_EXTRA_CONFIG: >
+         add_header Content-Security-Policy "
+         default-src 'self';
+         font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com;
+         style-src 'self' 'unsafe-inline'  https://fonts.googleapis.com https://cdnjs.cloudflare.com;
+         script-src 'self' https://maps.googleapis.com;
+         img-src 'self' https://www.youtube.com https://maps.gstatic.com https://maps.googleapis.com data: https://${MIDDLEWARE_DOMAIN};
+         connect-src 'self' https://${MIDDLEWARE_DOMAIN} https://analytics.esportal.live https://bugs.fslabs.net;
+         ";
+
+
+  mohe-preproduction-config-backend:
+    image: ${CONFIGURATION_BACKEND_IMAGE}
+    restart: always
+    expose:
+      - 3000
+    ports:
+      - "3150:3000"
+    networks:
+      nginx_proxy-network:
+      middleware-network:
+        aliases:
+          - middleware-config-backend-testing
+      config-network:
+    environment:
+      PORT: 3000
+      NODE_ENV: testing
+      MIDDLEWARE_DOMAIN: http://middleware:3000
+      MIDDLEWARE_BASE_URL: https://${MIDDLEWARE_DOMAIN}
+      VIRTUAL_HOST: ${CONFIGURATION_BACKEND_DOMAIN}
+      LETSENCRYPT_HOST: ${CONFIGURATION_BACKEND_DOMAIN}
+      LETSENCRYPT_EMAIL: support@fixedmea.com
+      COOKIE_SECRET: sa6asd$vd#1@0
+      CORS_DOMAIN: https://${MIDDLEWARE_DOMAIN} https://${CONFIGURATION_FRONTEND_DOMAIN} http://localhost:3010 http://localhost:3000 http://localhost:3001 http://localhost:3002 http://localhost:3003 http://localhost:3004 https://${STUDENT_INTERFACE_DOMAIN}
+      #SEEDING_LOOKUPS: 'true'
+      #SEEDING_COORDINATIONS: 'true'
+      MONGO_URL: mongodb://moheConfigAdmin:akw$dsae78w@config-database:27017/config_db
+
+  fix-config-mongodb-permissions:
+    image: 'alpine:3.10'
+    user: root
+    command: chown -R 1001:1001 /bitnami
+    volumes:
+      - "config-data:/bitnami"
+
+  config-database:
+    image: "bitnami/mongodb:4.4.2"
+    restart: on-failure
+    networks:
+      config-network:
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+      start_period: 20s
+    expose:
+      - 27119
+    ports:
+      - "27119:27017"
+    volumes:
+      - "config-data:/bitnami"
+    environment:
+      - MONGODB_USERNAME=moheConfigAdmin
+      - MONGODB_PASSWORD=akw$dsae78w
+      - MONGODB_DATABASE=config_db
+    
+  config-frontend:
+    image: ${CONFIGURATION_FRONTEND_IMAGE}
+    restart: always
+    expose:
+      - 8080
+    networks:
+      - nginx_proxy-network
+      - middleware-network
+      - config-network
+    environment:
+      VIRTUAL_HOST: ${CONFIGURATION_FRONTEND_DOMAIN}
+      LETSENCRYPT_HOST: ${CONFIGURATION_FRONTEND_DOMAIN}
+      LETSENCRYPT_EMAIL: support@fixedmea.com
+      REACT_APP_SERVER_DATA: >
+        {
+          REACT_APP_BACKEND_URL: 'https://${CONFIGURATION_BACKEND_DOMAIN}',
+          REACT_APP_SENTRY_DSN: 'https://d105acdc487f4b72aa18e5579d9ebc25@bugs.fslabs.net/27',
+          REACT_APP_SENTRY_ENVIRONMENT: 'testing'
+        }
+      REACT_APP_BACKEND_URL: https://${CONFIGURATION_BACKEND_DOMAIN}
+      NGINX_EXTRA_CONFIG: >
+         add_header Content-Security-Policy "
+         default-src 'self';
+         font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com;
+         style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com;
+         script-src 'self' https://maps.googleapis.com;
+         img-src 'self' https://www.youtube.com https://maps.gstatic.com https://maps.googleapis.com data: https://${MIDDLEWARE_DOMAIN};
+         connect-src 'self' https://${CONFIGURATION_BACKEND_DOMAIN} https://${MIDDLEWARE_DOMAIN} https://analytics.esportal.live;
+         ";
+# uncomment to change middleware domain
+    # command: >
+    #     sh -c "
+    #       find /usr/share/nginx/html -type f -exec sed -i -e 's/staging.eservice.middleware.fslabs.net/USER_DOMAIN/g' '{}' \;
+    #       nginx -g 'daemon off;'
+    #      "
+
+  security-integration:
+    image: git.serversadmins.com:5005/webdev/mohe/security-clearance-integration:latest-testing
+    restart: always
+    depends_on:
+      middleware:
+        condition: service_healthy
+    expose:
+      - 4000
+    networks:
+      nginx_proxy-network:
+      middleware-mongo-database-network:
+      middleware-network:
+    extra_hosts:
+      - "wg.esportal.io:41.128.245.126"
+    environment:
+      NODE_ENV: production
+      TOKEN_SEPARATOR: 'z'
+      MIDDLEWARE_DOMAIN: http://middleware:3000/api
+      SECURITY_CLEARANCE_DOMAIN: http://wg.esportal.io:3111/v1.0/EntityApi/
+      VIRTUAL_HOST: integration.mohe.testing.fslabs.net
+      LETSENCRYPT_HOST: integration.mohe.testing.fslabs.net
+      LETSENCRYPT_EMAIL: support@fixedmea.com
+      SECURITY_CLEARANCE_EMAIL: admin@fixed.local
+      SECURITY_CLEARANCE_PASSWORD: P@ssw0rd#123
+      SECURITY_CLEARANCE_PUBLIC_KEY: "-----BEGIN PUBLIC KEY-----\nMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAqAf+zD/m2Skh+1rQdWIj\nFkQyyfLqTy+lq9qIkKVjdYpO0NkiIRRUAHMWJXMut9bKzGx1ZjH2XB0uBLZ9+csL\nvyKiGpAPfTrXMRh3+fxGwn28HqXTVgs/zC/zak4toHIYx6P5Feqdjl+HvTpYorbn\nb2cb+GSreqPpeIOnJhgCvKaajwHO1/v2u2li6Vn/SwnBUskLdX/w3i/ebOiP4Rdh\nF+R2RzQ7xPN0Yo9EqMp2rKNId5F7dBbrhbAFfjPkCzgbqjy9FqzufGbnrVuR24k5\nFR9Y32yac9YDaDKPViD0QszXkhGOgOigIP9S32q2Jf2MOSBL9qP/4z8g6eL+3bVD\nXwIDAQAB\n-----END PUBLIC KEY-----"
+      SECURITY_CLEARANCE_PRIVATE_KEY: '<?xml version="1.0" encoding="utf-16"?><RSAParameters xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">  <D>FVD0YwypvlDt20enzF/MIwcH/URE/TdYkz4cTUjD8eDq6stRAZuhv0Yw84LlhTfwmC9a1kH0KGkxF7zeXwLU4aafVcxa3SimmgkLjmBGjhkdP4zsE10IoOWEUWKkH4SrwBGUiXHkvsip3CpLtE6VSKvZ5AVQJnqOA4zKv2bUUXxAIb3w7w0enKa7EyqTOJzll4L5O3eyTtFbXkn34HR3mPv6c1CK2c1jbajn6J8SxOaxo7ceLZqh3aV9baRaVI+1YW1kwKbngC5i66cV8v+6zKeCuI8LwMAUO65jUT+pj/NMHFcWq0VJaEqQe5zVlO38EAb3fSAGz4SoexbJaQgOYQ==</D>  <DP>vwMJXwuRCDi5DXR2WwqGWGTUAIofk+Qw8eaf2gS6HmP6HDdPmuv1rtN4yUdlFp2JFKNj8L99nyfFui4gD1G1bbqdnBStRVIpoAKmsG8h4XkjNG3O3syQGr9Cb9n2EMCAaQSFGl3VWluzm2zFzwlxjjP8G1r3ALgaeyuoQhwadbk=</DP>  <DQ>ePwH+sCpppBNpKXrOCgqeIz8PFUfKbhCeLzzwnN4vGV2KE34yhlM/eySfoDuxXJI6ZoSLtgecRhwrZU9xvC+Ch13cuvmTazAIRmDXBsPeYHMipCuYOOQ70wGgltTADGlHRwqL/V75hCFRuuRqNDasHNHc/9SVlFm6K5n4JYnMu0=</DQ>  <Exponent>AQAB</Exponent>  <InverseQ>XNo7qEBihmc2XrUUmtim0E+KTkWam3ZCN+dWPY9aqi8iYCkZHKCGj+2sWvUfRCqT7q6hJAIsdofuXf438Ibsz2LjgV5ND/C8Az1y2xO/fXrqkkJomFbr+xEvZn7yJ2IX8IoZr96Und+DUCpgDlEG+ktTb0AQDUfiWimHsiTiNtA=</InverseQ>  <Modulus>mQu2+C07UNig/MoDs+3XPq/DF+bvNt3Vqu3QTjiTCHAXqZHxje2yOhvT2RGHhPoa7WBWUDuGPIENQ3oAVUrSlGc8QPHiM7PSThGoQdimbtOrbuWgbb7SZVxcLtzt4xRI07mtvjeXdxCe/E1m8bRvCiDUPsy8zAX1oEZnGdidvLZvWvLUCk1U7lytVdzzy6KxLrkmcBXBgkO/iOAjoKpqqnwLgTcf2m9kdmA+tA5M4Q9yH4oKlfMa4ejXGWRKYNXG1uyNZxx+tV6B4w9sIX9adqOF/RWrnJmreMfw/qfpX42ASbO4HZBWKQA5v+niAhIPcgOffm9N7YXohDA/ktpKfQ==</Modulus>  <P>1yLdE63IKQLox7FRY6B7w0zn04DxJ/JdeQ4+nfIdnSAVZnHpcvL2YtYP2/W3K5EhZKnTEpTEdaZOZAJwOskY3Rpk7+hjpj8+OA0fWxiPQF6gzQ7Qhd3R0cjVxzZr/nryFij+0OcY7/kFriudFH+fzpvb9MSv5FTxUek+PBlliBs=</P>  <Q>th2p+zqyHCof/guYLDymMb2t2n58Y4grGAulKdlIJVayYjgNyG9uUIRfCaDAtfRZHYvn07/ej+kOIq3mmY0iuFgpNXHUqZhJ7uktRe0uiXrkAIBIKulNbo9W7lXy65OzFVP/FV2eiCJnygD3vC8bZXa3DKh8N5NSoAkhAQLzUUc=</Q></RSAParameters>'
+      MONGO_URL: mongodb://lclr_user:1th4ok1ymfurQaM9@middleware-database-primary:27017,middleware-database-secondary-1:27017,middleware-database-secondary-2:27017/lclr_db?replicaSet=replicaset
+      CRON_INTERVAL: '00 */2 * * * *'
+  postgres:
+      image: postgres:11
+      restart: always
+      volumes:
+        - postgres_data:/var/lib/postgresql/data
+      networks:
+        keycloak-db-network:
+      environment:
+        POSTGRES_DB: keycloak
+        POSTGRES_USER: keycloak
+        POSTGRES_PASSWORD: 23fhegwfKSJ6235fejjrfgegrhURHF364gsDFsd
+
+  keycloak:
+      image: git.serversadmins.com:5005/webdev/mohe/keycloak-iam:19.0.3
+      restart: always
+      environment:
+        VIRTUAL_HOST: agent-iam.mohe.testing.fslabs.net
+        LETSENCRYPT_HOST: agent-iam.mohe.testing.fslabs.net
+        LETSENCRYPT_EMAIL: support@arabhosters.com
+        CERT_NAME: study-in-egypt.gov.eg
+        VIRTUAL_PORT: 8080
+        PROXY_ADDRESS_FORWARDING: 'true'
+        JDBC_PARAMS: "ssl=false"
+        KC_DB_URL_HOST: postgres
+        KC_DB_URL_PORT: 5432
+        KC_DB_URL_DATABASE: keycloak
+        KC_DB_SCHEMA: public
+        KC_DB_USERNAME: keycloak
+        KC_DB_PASSWORD: 23fhegwfKSJ6235fejjrfgegrhURHF364gsDFsd
+        KEYCLOAK_DEFAULT_        KEYCLOAK_ADMIN: admin
+        KEYCLOAK_ADMIN_PASSWORD: 7eg35sJFHE366dgwfIQueuiKDJ837473KSOWEIhffhrWDbdjh: digital_egypt
+        KEYCLOAK_ADMIN: admin
+        KEYCLOAK_ADMIN_PASSWORD: 7eg35sJFHE366dgwfIQueuiKDJ837473KSOWEIhffhrWDbdjh
+      networks:
+        keycloak-db-network:
+        nginx_proxy-network:
+      expose:
+        - 8080
+      depends_on:
+        - postgres
+
+
+volumes:
+  middleware-primary-data:
+    driver: local
+  middleware-assets:
+    driver: local
+  rabbitmq-persistence:
+    driver: local
+  postgres_data:
+      driver: local
+  config-data:
+    driver: local
+  redis-cluster_data-0:
+    driver: local
+  redis-cluster_data-1:
+    driver: local
+  redis-cluster_data-2:
+    driver: local
+  redis-cluster_data-3:
+    driver: local
+  redis-cluster_data-4:
+    driver: local
+  redis-cluster_data-5:
+    driver: local
+networks:
+  middleware-network:
+  config-network:
+  rabbitmq-network:
+  redis-network:
+  elasticsearch-network:
+  middleware-mongo-database-network:
+  management-mongo-database-network:
+  keycloak-db-network:
+    driver: bridge
+  nginx_proxy-network:
+    external: true

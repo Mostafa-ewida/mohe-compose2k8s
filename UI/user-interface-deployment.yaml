@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-interface-testing-deployment
+  labels:
+    app: user-interface-testing
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: user-interface-testing
+  template:
+    metadata:
+      labels:
+        app: user-interface-testing
+    spec:
+      containers:
+        - name: user-interface
+          image: 
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: user-interface-configmap
+            - secretRef:
+                name: user-interface-secret
+      restartPolicy: Always

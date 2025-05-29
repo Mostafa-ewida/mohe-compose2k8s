@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agent-interface-testing-deployment
+  labels:
+    app: agent-interface-testing
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: agent-interface-testing
+  template:
+    metadata:
+      labels:
+        app: agent-interface-testing
+    spec:
+      containers:
+        - name: agent-interface
+          image: busybox:latest
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: agent-interface-config
+            - secretRef:
+                name: agent-interface-secret

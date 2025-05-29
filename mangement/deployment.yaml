@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: management-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: management
+  template:
+    metadata:
+      labels:
+        app: management
+    spec:
+      containers:
+      - name: management
+        image: busybox:latest # put you gitlab image here
+        ports:
+        - containerPort: 3000
+        envFrom:
+        - configMapRef:
+            name: management-config
+        - secretRef:
+            name: management-secrets
+        readinessProbe:
+          exec:
+            command: ["wget", "-O", "/dev/null", "-q", "localhost:3000"]
+          initialDelaySeconds: 30
+          periodSeconds: 30
+          timeoutSeconds: 3
+          failureThreshold: 3

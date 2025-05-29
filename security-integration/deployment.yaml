@@ -1,0 +1,44 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: security-integration-testing-deployment
+  labels:
+    app: security-integration-testing
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: security-integration-testing
+  template:
+    metadata:
+      labels:
+        app: security-integration-testing
+    spec:
+      restartPolicy: Always
+      containers:
+        - name: security-integration
+          image: busybox.latest
+          ports:
+            - containerPort: 4000
+          envFrom:
+            - configMapRef:
+                name: security-integration-config
+            - secretRef:
+                name: security-integration-secret
+      hostAliases:
+        - ip: "41.128.245.126"
+          hostnames:
+            - "wg.esportal.io"
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 4000
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 4000
+            initialDelaySeconds: 30
+            periodSeconds: 60
+      restartPolicy: Always

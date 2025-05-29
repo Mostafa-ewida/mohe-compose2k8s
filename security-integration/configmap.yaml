@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: security-integration-testing-configmap
+  labels:
+    app: security-integration-testing
+data:
+  NODE_ENV: "production"
+  TOKEN_SEPARATOR: "z"
+  MIDDLEWARE_DOMAIN: "http://middleware:3000/api"
+  SECURITY_CLEARANCE_DOMAIN: "http://wg.esportal.io:3111/v1.0/EntityApi/"
+  VIRTUAL_HOST: "integration.mohe.testing.fslabs.net"
+  LETSENCRYPT_HOST: "integration.mohe.testing.fslabs.net"
+  LETSENCRYPT_EMAIL: "support@fixedmea.com"
+  SECURITY_CLEARANCE_EMAIL: "admin@fixed.local"
+  CRON_INTERVAL: "00 */2 * * * *"

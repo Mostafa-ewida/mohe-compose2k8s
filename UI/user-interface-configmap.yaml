@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: user-interface-configmap
+data:
+  STUDENT_INTERFACE_DOMAIN: ""
+  MIDDLEWARE_DOMAIN: ""
+  CONFIGURATION_BACKEND_DOMAIN: ""
+  VIRTUAL_HOST: "${STUDENT_INTERFACE_DOMAIN}"
+  LETSENCRYPT_HOST: "${STUDENT_INTERFACE_DOMAIN}"
+  LETSENCRYPT_EMAIL: "support@fixedmea.com"
+  REACT_APP_BACKEND_URL: "https://${MIDDLEWARE_DOMAIN}"
+
+  NGINX_EXTRA_CONFIG: |
+         add_header Content-Security-Policy "
+         default-src 'self';
+         frame-src 'self' https://test-nbe.gateway.mastercard.com;
+         font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com;
+         style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com;
+         script-src 'self' 'unsafe-inline' 'unsafe-eval' https://maps.googleapis.com https://test-nbe.gateway.mastercard.com;
+         img-src 'self' https://www.youtube.com https://maps.gstatic.com https://maps.googleapis.com data: https://${MIDDLEWARE_DOMAIN};
+         connect-src 'self' https://${CONFIGURATION_BACKEND_DOMAIN} https://${MIDDLEWARE_DOMAIN} https://analytics.esportal.live https://bugs.fslabs.net;
+         ";
+         

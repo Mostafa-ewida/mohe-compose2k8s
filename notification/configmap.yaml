@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: notifications-config
+data:
+  RETRY_DELAY: "60000"
+  DEBUG: "rabbitMq_notification"
