@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: config-frontend-container
-          image: "${CONFIGURATION_FRONTEND_IMAGE}"
+          image: busybox:latest
           ports:
             - containerPort: 8080
           envFrom:

@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: user-interface
-          image: 
+          image: busybox:latest
           ports:
             - containerPort: 8080
           envFrom:
