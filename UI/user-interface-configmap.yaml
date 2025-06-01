@@ -3,9 +3,6 @@ kind: ConfigMap
 metadata:
   name: user-interface-configmap
 data:
-  STUDENT_INTERFACE_DOMAIN: ""
-  MIDDLEWARE_DOMAIN: ""
-  CONFIGURATION_BACKEND_DOMAIN: ""
   VIRTUAL_HOST: "${STUDENT_INTERFACE_DOMAIN}"
   LETSENCRYPT_HOST: "${STUDENT_INTERFACE_DOMAIN}"
   LETSENCRYPT_EMAIL: "support@fixedmea.com"

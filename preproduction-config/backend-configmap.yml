@@ -4,9 +4,6 @@ metadata:
   name: mohe-preproduction-config-backend-configmap
 data:
   NODE_ENV: "testing"
-  CONFIGURATION_BACKEND_DOMAIN: ""
-  CONFIGURATION_FRONTEND_DOMAIN: ""
-  STUDENT_INTERFACE_DOMAIN: ""
   MIDDLEWARE_DOMAIN: "http://middleware:3000"
   MIDDLEWARE_BASE_URL: "https://${MIDDLEWARE_DOMAIN}"
   VIRTUAL_HOST: "${CONFIGURATION_BACKEND_DOMAIN}"

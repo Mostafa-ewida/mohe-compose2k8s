@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: security-integration-testing-service
+  labels:
+    app: security-integration-testing
+spec:
+  type: ClusterIP 
+  selector:
+    app: security-integration-testing  
+  ports:
+    - name: http
+      port: 80      
+      targetPort: 4000  
+      protocol: TCP

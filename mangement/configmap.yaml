@@ -3,7 +3,6 @@ kind: ConfigMap
 metadata:
   name: management-config
 data:
-  MANAGEMENT_DOMAIN: ""
   ROOT_URL: "https://${MANAGEMENT_DOMAIN}"
   PORT: "3000"
   HTTP_FORWARDED_COUNT: "1"

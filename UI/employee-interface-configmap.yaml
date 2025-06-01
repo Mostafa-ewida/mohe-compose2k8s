@@ -3,8 +3,6 @@ kind: ConfigMap
 metadata:
   name: employee-interface-config
 data:
-  EMPLOYEE_DOMAIN: ""
-  MIDDLEWARE_DOMAIN: ""
   VIRTUAL_HOST: ${EMPLOYEE_DOMAIN}
   LETSENCRYPT_HOST: ${EMPLOYEE_DOMAIN}
   LETSENCRYPT_EMAIL: support@fixedmea.com
